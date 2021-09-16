@@ -1,0 +1,13 @@
+query Pokemon {
+  pokemons {
+    _id
+    name
+    pokenum
+    height
+    weight
+    color
+    description
+    sprite
+  }
+}
+

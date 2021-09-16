@@ -1,0 +1,94 @@
+type Query {
+  helloworld: String
+  """
+  Get all Pokemons 
+  """
+  pokemons: [Pokemon!]
+}
+
+type Pokemon {
+  _id: ID
+  name: String
+  pokenum: Int
+  type: [PokemonType]
+  height: Int
+  weight: Float
+  color: String
+  talents: [Talent]
+  abilities: [Ability]
+  evolutions: [Pokemon]
+  description: String
+  sprite: String
+}
+
+"""
+The possible pokemon types.
+"""
+enum PokemonType {
+  NORMAL
+  FIRE
+  WATER
+  ELECTRIC
+  GRASS
+  ICE
+  FIGHTING
+  POISON
+  GROUND
+  FLYING
+  PSYCHIC
+  BUG
+  ROCK
+  GHOST
+  DRAGON
+  DARK
+  STEEL
+  FAIRY
+}
+
+type Talent {
+  id: ID
+  name: String
+  description: String
+}
+
+type Ability {
+  id: ID
+  name: String
+  type: PokemonType
+  abilityType: AbilityType
+  power: Int
+  precision: Float
+  powerPoint: Int
+  target: Int
+}
+
+"""
+The different criteria according to each one has a abilit, and these different criteria which vary according to the generations..
+"""
+enum AbilityType {
+  PHYSIC
+  SPECIAL
+  STATUS
+}
+
+type Mutation {
+  """
+  Returns a Pokemon
+  """
+  data(input: getPokemonByIdInput!): getPokemonByIdPayload
+}
+
+type getPokemonByIdPayload {
+  pokemon: Pokemon
+  clientMutationId: String
+}
+
+input getPokemonByIdInput {
+  id: ID!
+  clientMutationId: String
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
