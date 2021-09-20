@@ -4,21 +4,42 @@ type Query {
   Get all Pokemons 
   """
   pokemons: [Pokemon!]
+  """
+  Get all Talents 
+  """
+  talents: [Talent!]
+  fetchPokemon("""The ID of a `Pokemon`.""" id: ID): Pokemon
+  fetchTalent: Talent
+  fetchMove: Move
+  syncTalents(min: Int, max: Int): [Talent!]
+  syncMoves(min: Int, max: Int): [Move!]
+  syncPokemons(min: Int, max: Int): [Pokemon!]
+  fetchPkmnName("""The ID of a `Pokemon`.""" id: ID): String
+  fetchPkmnDescription("""The ID of a `Pokemon`.""" id: ID): String
+  """
+  Find a Pokemon with its Id
+  """
+  pokemon("""The ID of a `Pokemon`.""" id: ID): Pokemon
+  """
+  Insert a Pokemon in db.
+  """
+  insertPokemon: Pokemon
 }
 
 type Pokemon {
   _id: ID
   name: String
-  pokenum: Int
+  pokenum: String
   type: [PokemonType]
   height: Int
   weight: Float
   color: String
   talents: [Talent]
-  abilities: [Ability]
+  moves: [Move]
   evolutions: [Pokemon]
   description: String
   sprite: String
+  species: String
 }
 
 """
@@ -46,46 +67,85 @@ enum PokemonType {
 }
 
 type Talent {
+  _id: ID
+  name: String
+  description: String
+  url: String
+}
+
+type Move {
   id: ID
   name: String
   description: String
-}
-
-type Ability {
-  id: ID
-  name: String
   type: PokemonType
-  abilityType: AbilityType
+  moveType: MoveType
   power: Int
   precision: Float
   powerPoint: Int
-  target: Int
+  target: String
 }
 
 """
 The different criteria according to each one has a abilit, and these different criteria which vary according to the generations..
 """
-enum AbilityType {
-  PHYSIC
+enum MoveType {
+  PHYSICAL
   SPECIAL
   STATUS
 }
 
 type Mutation {
   """
-  Returns a Pokemon
+  Add a pokemon
   """
-  data(input: getPokemonByIdInput!): getPokemonByIdPayload
+  addPokemon(input: AddPokemonInput!): AddPokemonPayload
 }
 
-type getPokemonByIdPayload {
+type AddPokemonPayload {
   pokemon: Pokemon
   clientMutationId: String
 }
 
-input getPokemonByIdInput {
-  id: ID!
+input AddPokemonInput {
+  _id: ID
+  name: String
+  pokenum: String
+  type: [PokemonType]
+  height: Int
+  weight: Float
+  color: String
+  talents: [String]
+  moves: [MoveInput]
+  evolutions: [PokemonInput]
+  description: String
+  sprite: String
   clientMutationId: String
+}
+
+input MoveInput {
+  id: ID
+  name: String
+  type: PokemonType
+  moveType: MoveType
+  power: Int
+  precision: Float
+  powerPoint: Int
+  target: Int
+}
+
+input PokemonInput {
+  _id: ID
+  name: String
+  pokenum: String
+  type: [PokemonType]
+  height: Int
+  weight: Float
+  color: String
+  talents: [String]
+  moves: [MoveInput]
+  evolutions: [PokemonInput]
+  description: String
+  sprite: String
 }
 
 schema {

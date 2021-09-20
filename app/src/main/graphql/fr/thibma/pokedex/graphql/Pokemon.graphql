@@ -1,5 +1,5 @@
-query Pokemon {
-  pokemons {
+query Pokemon ($pokenum: ID) {
+  pokemon (id: $pokenum) {
     _id
     name
     pokenum
@@ -7,7 +7,13 @@ query Pokemon {
     weight
     color
     description
+    type
+    species
     sprite
+    talents {
+      _id
+      name
+      description
+    }
   }
 }
-

@@ -1,0 +1,9 @@
+query PokemonSummary {
+    pokemons {
+    _id
+    name
+    pokenum
+    sprite
+    type
+  }
+}

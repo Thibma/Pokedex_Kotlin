@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:foregroundTint="#834141"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/imageViewPokemon"
@@ -12,12 +16,22 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:contentDescription="pokemonImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="pokemonImage"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ProgressBar
+        android:id="@+id/progressbarPokemonItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/primary_700"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewPokemon"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewPokemon"
+        app:layout_constraintStart_toStartOf="@+id/imageViewPokemon"
+        app:layout_constraintTop_toTopOf="@+id/imageViewPokemon" />
 
     <TextView
         android:id="@+id/textViewPokemonName"
@@ -55,6 +69,7 @@
         android:layout_width="100dp"
         android:layout_height="22dp"
         android:layout_marginStart="8dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/imageViewType1"
         app:layout_constraintTop_toTopOf="@+id/imageViewType1"
         app:srcCompat="@drawable/normal_type" />

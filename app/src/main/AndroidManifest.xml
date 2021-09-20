@@ -3,6 +3,7 @@
     package="fr.thibma.pokedex">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -14,7 +15,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".activities.PokemonDetailActivity"></activity>
         <activity android:name=".activities.SplashScreenActivity" />
-        <activity android:name=".activities.PokedexActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
