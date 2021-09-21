@@ -10,10 +10,20 @@ query Pokemon ($pokenum: ID) {
     type
     species
     sprite
+    spriteSmall
     talents {
       _id
       name
       description
+    }
+    moves {
+      _id
+      name
+      type
+      moveType
+      power
+      precision
+      powerPoint
     }
   }
 }

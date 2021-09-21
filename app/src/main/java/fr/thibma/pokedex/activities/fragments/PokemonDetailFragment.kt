@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import fr.thibma.pokedex.PokemonQuery
 import fr.thibma.pokedex.R
+import fr.thibma.pokedex.adapter.MoveListAdapter
 import fr.thibma.pokedex.adapter.TalentListAdapter
 import fr.thibma.pokedex.utils.TypeConverter
 
@@ -33,6 +34,7 @@ class PokemonDetailFragment(private val pokemon: PokemonQuery.Pokemon) : Fragmen
     private lateinit var heightTextView: TextView
     private lateinit var weightTextView: TextView
     private lateinit var talentRecyclerView: RecyclerView
+    private lateinit var moveRecyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,10 +61,15 @@ class PokemonDetailFragment(private val pokemon: PokemonQuery.Pokemon) : Fragmen
         heightTextView = requireActivity().findViewById(R.id.textViewHeight)
         weightTextView = requireActivity().findViewById(R.id.textViewWeight)
         talentRecyclerView = requireActivity().findViewById(R.id.recyclerViewTalent)
+        moveRecyclerView = requireActivity().findViewById(R.id.recyclerViewMove)
 
         Glide.with(this)
             .load(pokemon.sprite)
             .into(imageViewPokemon)
+
+        Glide.with(this)
+            .load(pokemon.spriteSmall)
+            .into(miniPokemonImageView)
 
         pokedexNumberTextView.text = "N°" + pokemon.pokenum.toString()
         pokemonNameTextView.text = pokemon.name
@@ -92,5 +99,10 @@ class PokemonDetailFragment(private val pokemon: PokemonQuery.Pokemon) : Fragmen
         talentRecyclerView.adapter = pokemonTalentListAdapter
         talentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         talentRecyclerView.setHasFixedSize(true)
+
+        val pokemonMoveListAdapter = MoveListAdapter(pokemon.moves)
+        moveRecyclerView.adapter = pokemonMoveListAdapter
+        moveRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        moveRecyclerView.setHasFixedSize(true)
     }
 }

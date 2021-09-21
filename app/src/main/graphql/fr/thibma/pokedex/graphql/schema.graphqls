@@ -1,154 +1,157 @@
-type Query {
-  helloworld: String
-  """
-  Get all Pokemons 
-  """
-  pokemons: [Pokemon!]
-  """
-  Get all Talents 
-  """
-  talents: [Talent!]
-  fetchPokemon("""The ID of a `Pokemon`.""" id: ID): Pokemon
-  fetchTalent: Talent
-  fetchMove: Move
-  syncTalents(min: Int, max: Int): [Talent!]
-  syncMoves(min: Int, max: Int): [Move!]
-  syncPokemons(min: Int, max: Int): [Pokemon!]
-  fetchPkmnName("""The ID of a `Pokemon`.""" id: ID): String
-  fetchPkmnDescription("""The ID of a `Pokemon`.""" id: ID): String
-  """
-  Find a Pokemon with its Id
-  """
-  pokemon("""The ID of a `Pokemon`.""" id: ID): Pokemon
-  """
-  Insert a Pokemon in db.
-  """
-  insertPokemon: Pokemon
-}
+# This file was generated based on ".graphqlconfig". Do not edit manually.
 
-type Pokemon {
-  _id: ID
-  name: String
-  pokenum: String
-  type: [PokemonType]
-  height: Int
-  weight: Float
-  color: String
-  talents: [Talent]
-  moves: [Move]
-  evolutions: [Pokemon]
-  description: String
-  sprite: String
-  species: String
-}
-
-"""
-The possible pokemon types.
-"""
-enum PokemonType {
-  NORMAL
-  FIRE
-  WATER
-  ELECTRIC
-  GRASS
-  ICE
-  FIGHTING
-  POISON
-  GROUND
-  FLYING
-  PSYCHIC
-  BUG
-  ROCK
-  GHOST
-  DRAGON
-  DARK
-  STEEL
-  FAIRY
-}
-
-type Talent {
-  _id: ID
-  name: String
-  description: String
-  url: String
-}
-
-type Move {
-  id: ID
-  name: String
-  description: String
-  type: PokemonType
-  moveType: MoveType
-  power: Int
-  precision: Float
-  powerPoint: Int
-  target: String
-}
-
-"""
-The different criteria according to each one has a abilit, and these different criteria which vary according to the generations..
-"""
-enum MoveType {
-  PHYSICAL
-  SPECIAL
-  STATUS
-}
-
-type Mutation {
-  """
-  Add a pokemon
-  """
-  addPokemon(input: AddPokemonInput!): AddPokemonPayload
+schema {
+    query: Query
+    mutation: Mutation
 }
 
 type AddPokemonPayload {
-  pokemon: Pokemon
-  clientMutationId: String
+    clientMutationId: String
+    pokemon: Pokemon
+}
+
+type Move {
+    _id: ID
+    description: String
+    moveType: MoveType
+    name: String
+    power: Int
+    powerPoint: Int
+    precision: Float
+    target: String
+    type: PokemonType
+}
+
+type Mutation {
+    "Add a pokemon"
+    addPokemon(input: AddPokemonInput!): AddPokemonPayload
+}
+
+type Pokemon {
+    _id: ID
+    color: String
+    description: String
+    evolutions: [Pokemon]
+    height: Int
+    moves: [Move]
+    name: String
+    pokenum: String
+    species: String
+    sprite: String
+    spriteSmall: String
+    talents: [Talent]
+    type: [PokemonType]
+    weight: Float
+}
+
+type Query {
+    fetchMove: Move
+    fetchPkmnDescription(
+        "The ID of a `Pokemon`."
+        id: ID
+    ): String
+    fetchPkmnName(
+        "The ID of a `Pokemon`."
+        id: ID
+    ): String
+    fetchPokemon(
+        "The ID of a `Pokemon`."
+        id: ID
+    ): Pokemon
+    fetchTalent: Talent
+    helloworld: String
+    "Insert a Pokemon in db."
+    insertPokemon: Pokemon
+    "Find a Pokemon with its Id"
+    pokemon(
+        "The ID of a `Pokemon`."
+        id: ID
+    ): Pokemon
+    "Get all Pokemons "
+    pokemons: [Pokemon!]
+    syncMoves(max: Int, min: Int): [Move!]
+    syncPokemons(max: Int, min: Int): [Pokemon!]
+    syncTalents(max: Int, min: Int): [Talent!]
+    "Get all Talents "
+    talents: [Talent!]
+}
+
+type Talent {
+    _id: ID
+    description: String
+    name: String
+    url: String
+}
+
+"The different criteria according to each one has a abilit, and these different criteria which vary according to the generations.."
+enum MoveType {
+    PHYSICAL
+    SPECIAL
+    STATUS
+}
+
+"The possible pokemon types."
+enum PokemonType {
+    BUG
+    DARK
+    DRAGON
+    ELECTRIC
+    FAIRY
+    FIGHTING
+    FIRE
+    FLYING
+    GHOST
+    GRASS
+    GROUND
+    ICE
+    NORMAL
+    POISON
+    PSYCHIC
+    ROCK
+    STEEL
+    WATER
 }
 
 input AddPokemonInput {
-  _id: ID
-  name: String
-  pokenum: String
-  type: [PokemonType]
-  height: Int
-  weight: Float
-  color: String
-  talents: [String]
-  moves: [MoveInput]
-  evolutions: [PokemonInput]
-  description: String
-  sprite: String
-  clientMutationId: String
+    _id: ID
+    clientMutationId: String
+    color: String
+    description: String
+    evolutions: [PokemonInput]
+    height: Int
+    moves: [MoveInput]
+    name: String
+    pokenum: String
+    sprite: String
+    spriteSmall: String
+    talents: [String]
+    type: [PokemonType]
+    weight: Float
 }
 
 input MoveInput {
-  id: ID
-  name: String
-  type: PokemonType
-  moveType: MoveType
-  power: Int
-  precision: Float
-  powerPoint: Int
-  target: Int
+    id: ID
+    moveType: MoveType
+    name: String
+    power: Int
+    powerPoint: Int
+    precision: Float
+    target: Int
+    type: PokemonType
 }
 
 input PokemonInput {
-  _id: ID
-  name: String
-  pokenum: String
-  type: [PokemonType]
-  height: Int
-  weight: Float
-  color: String
-  talents: [String]
-  moves: [MoveInput]
-  evolutions: [PokemonInput]
-  description: String
-  sprite: String
-}
-
-schema {
-  query: Query
-  mutation: Mutation
+    _id: ID
+    color: String
+    description: String
+    evolutions: [PokemonInput]
+    height: Int
+    moves: [MoveInput]
+    name: String
+    pokenum: String
+    sprite: String
+    spriteSmall: String
+    talents: [String]
+    type: [PokemonType]
+    weight: Float
 }
