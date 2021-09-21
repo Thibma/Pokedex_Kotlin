@@ -25,5 +25,11 @@ query Pokemon ($pokenum: ID) {
       precision
       powerPoint
     }
+    evolutions {
+      _id
+      pokenum
+      name
+      sprite
+    }
   }
 }

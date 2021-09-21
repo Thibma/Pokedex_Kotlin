@@ -2,24 +2,33 @@ package fr.thibma.pokedex.activities.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Input
+import com.apollographql.apollo.coroutines.await
 import com.bumptech.glide.Glide
 import fr.thibma.pokedex.PokemonQuery
 import fr.thibma.pokedex.R
+import fr.thibma.pokedex.adapter.FamilyListAdapter
 import fr.thibma.pokedex.adapter.MoveListAdapter
 import fr.thibma.pokedex.adapter.TalentListAdapter
 import fr.thibma.pokedex.utils.TypeConverter
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
-class PokemonDetailFragment(private val pokemon: PokemonQuery.Pokemon) : Fragment() {
+class PokemonDetailFragment(private var pokemon: PokemonQuery.Pokemon) : Fragment() {
 
     private lateinit var miniPokemonImageView: ImageView
     private lateinit var leftPokemonButton: ImageButton
@@ -35,6 +44,7 @@ class PokemonDetailFragment(private val pokemon: PokemonQuery.Pokemon) : Fragmen
     private lateinit var weightTextView: TextView
     private lateinit var talentRecyclerView: RecyclerView
     private lateinit var moveRecyclerView: RecyclerView
+    private lateinit var familyRecyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +72,25 @@ class PokemonDetailFragment(private val pokemon: PokemonQuery.Pokemon) : Fragmen
         weightTextView = requireActivity().findViewById(R.id.textViewWeight)
         talentRecyclerView = requireActivity().findViewById(R.id.recyclerViewTalent)
         moveRecyclerView = requireActivity().findViewById(R.id.recyclerViewMove)
+        familyRecyclerView = requireActivity().findViewById(R.id.recyclerViewFamily)
 
+        leftPokemonButton.setOnClickListener {
+            MainScope().launch {
+                getPokemonNumber(pokemon.pokenum!!.toInt() - 1)
+            }
+        }
+
+        rightPokemonButton.setOnClickListener {
+            MainScope().launch {
+                getPokemonNumber(pokemon.pokenum!!.toInt() + 1)
+            }
+        }
+
+        loadElements()
+
+    }
+
+    private fun loadElements() {
         Glide.with(this)
             .load(pokemon.sprite)
             .into(imageViewPokemon)
@@ -75,34 +103,56 @@ class PokemonDetailFragment(private val pokemon: PokemonQuery.Pokemon) : Fragmen
         pokemonNameTextView.text = pokemon.name
 
         typeImageView1.setImageResource(TypeConverter(pokemon.type!![0]!!).getImage())
-        if (pokemon.type.size < 2) {
+        if (pokemon.type!!.size < 2) {
             typeImageView2.visibility = View.INVISIBLE
         }
         else {
-            typeImageView2.setImageResource(TypeConverter(pokemon.type[1]!!).getImage())
+            typeImageView2.setImageResource(TypeConverter(pokemon.type!![1]!!).getImage())
         }
         heightTextView.text = "Taille : " + pokemon.height.toString() + "cm"
         weightTextView.text = "Poids : " + pokemon.weight.toString() + "kg"
-
-        leftPokemonButton.setOnClickListener {
-            Log.d("GAUCHE", "Pokemon de gauche")
-        }
-
-        rightPokemonButton.setOnClickListener {
-            Log.d("DROIT", "Pokémon de droite")
-        }
 
         pokemonCategoryTextView.text = pokemon.species
         pokedexDescriptionTextView.text = pokemon.description
 
         val pokemonTalentListAdapter = TalentListAdapter(pokemon.talents)
+        talentRecyclerView.isNestedScrollingEnabled = false
         talentRecyclerView.adapter = pokemonTalentListAdapter
         talentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         talentRecyclerView.setHasFixedSize(true)
 
         val pokemonMoveListAdapter = MoveListAdapter(pokemon.moves)
+        moveRecyclerView.isNestedScrollingEnabled = false
         moveRecyclerView.adapter = pokemonMoveListAdapter
         moveRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         moveRecyclerView.setHasFixedSize(true)
+
+        val familyListAdapter = FamilyListAdapter(pokemon.evolutions)
+        familyRecyclerView.isNestedScrollingEnabled = false
+        familyRecyclerView.adapter = familyListAdapter
+        familyRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+        familyRecyclerView.setHasFixedSize(true)
+    }
+
+    private suspend fun getPokemonNumber(pokenum: Int) {
+        if (pokenum == 0) {
+            return
+        }
+
+        coroutineScope {
+            try {
+                val apolloClient = ApolloClient.builder()
+                    .serverUrl("http://mocprojects.spell.ovh:4000/graphql")
+                    .build()
+                val response = apolloClient.query(PokemonQuery(Input.fromNullable(pokenum.toString()))).await()
+
+                pokemon = response.data?.pokemon!!
+                loadElements()
+            }
+            catch (e: Exception) {
+                return@coroutineScope
+            }
+        }
+
     }
 }
