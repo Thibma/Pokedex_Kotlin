@@ -28,7 +28,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class PokemonDetailFragment(private var pokemon: PokemonQuery.Pokemon) : Fragment() {
+class PokemonDetailFragment(private var pokemon: PokemonQuery.Pokemon) : Fragment(), FamilyListAdapter.OnItemClickListener{
 
     private lateinit var miniPokemonImageView: ImageView
     private lateinit var leftPokemonButton: ImageButton
@@ -107,6 +107,7 @@ class PokemonDetailFragment(private var pokemon: PokemonQuery.Pokemon) : Fragmen
             typeImageView2.visibility = View.INVISIBLE
         }
         else {
+            typeImageView2.visibility = View.VISIBLE
             typeImageView2.setImageResource(TypeConverter(pokemon.type!![1]!!).getImage())
         }
         heightTextView.text = "Taille : " + pokemon.height.toString() + "cm"
@@ -127,7 +128,7 @@ class PokemonDetailFragment(private var pokemon: PokemonQuery.Pokemon) : Fragmen
         moveRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         moveRecyclerView.setHasFixedSize(true)
 
-        val familyListAdapter = FamilyListAdapter(pokemon.evolutions)
+        val familyListAdapter = FamilyListAdapter(pokemon.evolutions, this)
         familyRecyclerView.isNestedScrollingEnabled = false
         familyRecyclerView.adapter = familyListAdapter
         familyRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
@@ -154,5 +155,11 @@ class PokemonDetailFragment(private var pokemon: PokemonQuery.Pokemon) : Fragmen
             }
         }
 
+    }
+
+    override fun onItemClick(position: Int) {
+        MainScope().launch {
+            getPokemonNumber(pokemon.evolutions?.get(position)?.pokenum!!.toInt())
+        }
     }
 }

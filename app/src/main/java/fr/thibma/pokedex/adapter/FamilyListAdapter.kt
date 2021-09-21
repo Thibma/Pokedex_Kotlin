@@ -10,11 +10,27 @@ import com.bumptech.glide.Glide
 import fr.thibma.pokedex.PokemonQuery
 import fr.thibma.pokedex.R
 
-class FamilyListAdapter(private val listPokemon: List<PokemonQuery.Evolution?>?) : RecyclerView.Adapter<FamilyListAdapter.FamilyListViewHolder>() {
+class FamilyListAdapter(private val listPokemon: List<PokemonQuery.Evolution?>?, private val listener: OnItemClickListener) : RecyclerView.Adapter<FamilyListAdapter.FamilyListViewHolder>() {
 
-    inner class FamilyListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class FamilyListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val pokemonImageView: ImageView = itemView.findViewById(R.id.imageViewFamilyPokemon)
         val pokemonNameTextView: TextView = itemView.findViewById(R.id.textViewFamilyPokemon)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
+
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
     }
 
     override fun onCreateViewHolder(
